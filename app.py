@@ -12,12 +12,12 @@ st.markdown("Automated RAG-powered expense claim auditing against the 2026 Globa
 
 # Sidebar for API Key Config
 st.sidebar.header("Configuration")
-api_key = st.sidebar.text_input("Enter your Google Gemini API Key", type="password")
+api_key = st.sidebar.text_input("Enter your Google Gemini API Key", type="password", value="")
 
 if api_key:
     genai.configure(api_key=api_key)
-    # Using stable model version
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    # Using gemini-pro for stable API execution
+    model = genai.GenerativeModel("gemini-pro")
 
     # Advanced Policy Context
     policy_context = """
@@ -44,7 +44,7 @@ if api_key:
     - 5.1 Submission Window: Must be submitted within 14 days of trip completion. Late submissions auto-rejected.
     """
 
-    # Main User Input Area inside a Form to prevent auto-submission
+    # Main User Input Area inside a Form
     st.subheader("📝 Submit Expense Claim for Audit")
     
     with st.form("audit_form"):
