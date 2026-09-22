@@ -8,7 +8,7 @@ st.set_page_config(
 )
 
 st.title("🛡️ AuditFlow: Enterprise AI Compliance Auditor")
-st.markdown("Automated RAG-powered expense claim auditing using Meta Llama 3 & Groq Enterprise Engine.")
+st.markdown("Automated RAG-powered expense claim auditing using Groq Enterprise Engine.")
 
 # Sidebar for Groq API Key Config
 st.sidebar.header("Configuration")
@@ -59,7 +59,7 @@ if api_key:
 
     if submit_button:
         if claim_text:
-            with st.spinner("Analyzing claim against 2026 Enterprise Policy Handbook using Llama 3..."):
+            with st.spinner("Analyzing claim against 2026 Enterprise Policy Handbook..."):
                 try:
                     system_prompt = f"""
                     You are AuditFlow, an expert corporate financial compliance auditor. 
@@ -76,7 +76,7 @@ if api_key:
                     user_prompt = f"Employee Name: {employee_name}\nClaim Details: {claim_text}"
 
                     chat_completion = client.chat.completions.create(
-                        model="llama-3.3-70b-versatile",
+                        model="openai/gpt-oss-120b",
                         messages=[
                             {"role": "system", "content": system_prompt},
                             {"role": "user", "content": user_prompt}
