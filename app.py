@@ -16,6 +16,7 @@ api_key = st.sidebar.text_input("Enter your Google Gemini API Key", type="passwo
 
 if api_key:
     genai.configure(api_key=api_key)
+    # Using stable model version
     model = genai.GenerativeModel("gemini-1.5-flash")
 
     # Advanced Policy Context
@@ -43,37 +44,42 @@ if api_key:
     - 5.1 Submission Window: Must be submitted within 14 days of trip completion. Late submissions auto-rejected.
     """
 
-    # Main User Input Area
+    # Main User Input Area inside a Form to prevent auto-submission
     st.subheader("📝 Submit Expense Claim for Audit")
-    employee_name = st.text_input("Employee Name", "Rahul Sharma")
-    claim_text = st.text_area(
-        "Enter Expense Details & Bills", 
-        "Stayed in Mumbai hotel for ₹5,200 per night, submitted a laundry bill of ₹300, and a bar bill of ₹600."
-    )
+    
+    with st.form("audit_form"):
+        employee_name = st.text_input("Employee Name", "Rahul Sharma")
+        claim_text = st.text_area(
+            "Enter Expense Details & Bills", 
+            "Stayed in Mumbai hotel for ₹5,200 per night, submitted a laundry bill of ₹300, and a bar bill of ₹600."
+        )
+        submit_button = st.form_submit_button("Run Enterprise Audit")
 
-    if st.button("Run Enterprise Audit"):
+    if submit_button:
         if claim_text:
             with st.spinner("Analyzing claim against 2026 Enterprise Policy Handbook..."):
-                
-                system_prompt = f"""
-                You are AuditFlow, an expert corporate financial compliance auditor. 
-                Audit the employee expense claim strictly against the provided policy context below.
-                
-                POLICY CONTEXT:
-                {policy_context}
-                
-                Provide the output in two parts:
-                1. An Audit Summary Table with columns: Expense Item | Amount Claimed | Approved Amount | Disallowed/Over-claim.
-                2. Auditor's Final Action Directive explaining exact section violations.
-                """
+                try:
+                    system_prompt = f"""
+                    You are AuditFlow, an expert corporate financial compliance auditor. 
+                    Audit the employee expense claim strictly against the provided policy context below.
+                    
+                    POLICY CONTEXT:
+                    {policy_context}
+                    
+                    Provide the output in two parts:
+                    1. An Audit Summary Table with columns: Expense Item | Amount Claimed | Approved Amount | Disallowed/Over-claim.
+                    2. Auditor's Final Action Directive explaining exact section violations.
+                    """
 
-                user_prompt = f"Employee Name: {employee_name}\nClaim Details: {claim_text}"
+                    user_prompt = f"Employee Name: {employee_name}\nClaim Details: {claim_text}"
 
-                response = model.generate_content([system_prompt, user_prompt])
-                
-                st.markdown("---")
-                st.subheader("📊 Audit Report & Compliance Verdict")
-                st.markdown(response.text)
+                    response = model.generate_content([system_prompt, user_prompt])
+                    
+                    st.markdown("---")
+                    st.subheader("📊 Audit Report & Compliance Verdict")
+                    st.markdown(response.text)
+                except Exception as e:
+                    st.error(f"API Error: {e}")
         else:
               st.warning("Please enter expense details to audit.")
 else:
