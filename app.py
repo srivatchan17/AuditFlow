@@ -16,8 +16,8 @@ api_key = st.sidebar.text_input("Enter your Google Gemini API Key", type="passwo
 
 if api_key:
     genai.configure(api_key=api_key)
-    # Using gemini-pro for stable API execution
-    model = genai.GenerativeModel("gemini-pro")
+    # Using the correct modern Gemini 1.5 Flash model
+    model = genai.GenerativeModel("gemini-1.5-flash")
 
     # Advanced Policy Context
     policy_context = """
