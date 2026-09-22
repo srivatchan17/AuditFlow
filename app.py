@@ -4,7 +4,7 @@ import google.generativeai as genai
 # Page Configuration
 st.set_page_config(
     page_title="AuditFlow - Enterprise AI Compliance Auditor",
-    page_layout="wide"
+    layout="wide"
 )
 
 st.title("🛡️ AuditFlow: Enterprise AI Compliance Auditor")
